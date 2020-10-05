@@ -13,15 +13,6 @@ public class ApplePodcast {
     private Long collectionId;
     private Long trackId;
 
-    private String artistName;
-    private String collectionName;
-    private String trackName;
-
-    private String releaseDate;
-    private String country;
-    private String primaryGenreName;
-    private String artworkUrl;
-
     public Long getId() {
         return id;
     }
@@ -109,4 +100,13 @@ public class ApplePodcast {
     public void setArtworkUrl(String artworkUrl) {
         this.artworkUrl = artworkUrl;
     }
+
+    private String artistName;
+    private String collectionName;
+    private String trackName;
+
+    private String releaseDate;
+    private String country;
+    private String primaryGenreName;
+    private String artworkUrl;
 }
