@@ -7,8 +7,6 @@ import java.util.List;
 @Entity
 @Table(name = "podcasts")
 public class ApplePodcast {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String artistName;
     private String collectionName;
     private String trackName;
@@ -33,6 +31,8 @@ public class ApplePodcast {
     private String trackExplicitness;
     private String releaseDate;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private long artistId;
     private long collectionId;
@@ -46,10 +46,10 @@ public class ApplePodcast {
     private double collectionPrice;
     private double trackPrice;
     @Column
-    @ElementCollection(targetClass=Integer.class)
+    @ElementCollection(targetClass=String.class)
     private List<String> genreIds;
     @Column
-    @ElementCollection(targetClass=Integer.class)
+    @ElementCollection(targetClass=String.class)
     private List<String> genres;
 
     public String getWrapperType() {

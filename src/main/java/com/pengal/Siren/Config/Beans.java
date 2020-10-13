@@ -1,6 +1,8 @@
 package com.pengal.Siren.Config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,16 +20,21 @@ public class Beans {
         return new ObjectMapper();
     }
 
-    @Bean
-    @Primary
-    RestTemplate restTemplate() {
-        HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-        httpRequestFactory.setConnectionRequestTimeout(10000);
-        httpRequestFactory.setReadTimeout(10000);
+//    @Bean
+//    @Primary
+//    RestTemplate restTemplate() {
+//        HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+//        httpRequestFactory.setConnectionRequestTimeout(10000);
+//        httpRequestFactory.setReadTimeout(10000);
+//
+//        RestTemplate restTemplate = new RestTemplate(httpRequestFactory);
+//        //TODO ADD INTERCEPTOR
+//        return restTemplate;
+//    }
 
-        RestTemplate restTemplate = new RestTemplate(httpRequestFactory);
-        //TODO ADD INTERCEPTOR
-        //restTemplate.getInterceptors().add();
-        return restTemplate;
+    @Bean
+    Logger logger() {
+        return LoggerFactory.getLogger(Beans.class);
     }
+
 }

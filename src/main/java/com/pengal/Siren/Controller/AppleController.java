@@ -4,8 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pengal.Siren.Exception.ResourceNotFoundException;
 import com.pengal.Siren.Model.ApplePodcast;
-import com.pengal.Siren.Model.AppleResponse;
+import com.pengal.Siren.Model.ApplePodcastWrapper;
 import com.pengal.Siren.Repositories.AppleRepository;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -13,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static com.pengal.Siren.Repositories.AppleRepository.ITUNES_URL;
 
@@ -26,6 +27,8 @@ public class AppleController {
     private AppleRepository appleRepository;
     @Autowired
     private WebClient.Builder webClientBuilder;
+    @Autowired
+    private Logger logger;
 
     @GetMapping("top100")
     public String top100() {
@@ -47,11 +50,11 @@ public class AppleController {
     @GetMapping(value="async_news")
     public String asyncUpdateNews() {
         String url = ITUNES_URL + "term=" + "news";
-        AppleResponse response = webClientBuilder.build()
+        ApplePodcastWrapper response = webClientBuilder.build()
                 .get()
                 .uri(url)
                 .retrieve()
-                .bodyToMono(AppleResponse.class).block();
+                .bodyToMono(ApplePodcastWrapper.class).block();
         if (response != null) {
             return response.toString();
         } else {
@@ -69,10 +72,13 @@ public class AppleController {
                 .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
         HttpEntity<String> response = restTemplate.getForEntity(url, String.class);
         ObjectMapper objectMapper = new ObjectMapper();
-        AppleResponse appleResponse = objectMapper.readValue(response.getBody(), AppleResponse.class);
+        ApplePodcastWrapper applePodcastWrapper = objectMapper.readValue(response.getBody(), ApplePodcastWrapper.class);
 
-        if (appleResponse != null) {
-            return response.toString();
+        if (applePodcastWrapper != null) {
+            logger.debug("updateNews found " + applePodcastWrapper.getResultCount() + " results");
+            List<ApplePodcast> applePodcastList = applePodcastWrapper.getResults();
+            appleRepository.saveAll(applePodcastList);
+            return applePodcastWrapper.getResultCount() + "";
         } else {
             return null;
         }

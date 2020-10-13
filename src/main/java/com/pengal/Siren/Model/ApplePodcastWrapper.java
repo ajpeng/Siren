@@ -2,7 +2,7 @@ package com.pengal.Siren.Model;
 
 import java.util.List;
 
-public class AppleResponse {
+public class ApplePodcastWrapper {
     Integer resultCount;
     List<ApplePodcast> results;
 
