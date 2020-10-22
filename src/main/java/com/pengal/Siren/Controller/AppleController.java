@@ -20,7 +20,7 @@ import java.util.List;
 import static com.pengal.Siren.Repositories.AppleRepository.ITUNES_URL;
 
 @RestController
-@RequestMapping("/apple/")
+@RequestMapping("/apple")
 public class AppleController {
 
     @Autowired
@@ -30,12 +30,12 @@ public class AppleController {
     @Autowired
     private Logger logger;
 
-    @GetMapping("top100")
+    @GetMapping("/top100")
     public String top100() {
         return "{\"TODO\"}";
     }
 
-    @GetMapping("search")
+    @GetMapping("/search")
     public String search(@RequestParam String query) {
 
         RestTemplate restTemplate = new RestTemplate();
@@ -47,7 +47,7 @@ public class AppleController {
         return response.toString();
     }
 
-    @GetMapping(value="async_news")
+    @GetMapping(value="/async_news")
     public String asyncUpdateNews() {
         String url = ITUNES_URL + "term=" + "news";
         ApplePodcastWrapper response = webClientBuilder.build()
@@ -62,7 +62,7 @@ public class AppleController {
         }
     }
 
-    @RequestMapping(value="news")
+    @RequestMapping(value="/news")
     public String updateNews() throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         String url = ITUNES_URL + "term=" + "news";
@@ -84,12 +84,12 @@ public class AppleController {
         }
     }
 
-    @PostMapping("podcast/save")
+    @PostMapping("/podcast/save")
     public ApplePodcast createPodcast(@PathVariable(value = "id") Long podcastTrackId, @RequestBody ApplePodcast podcast) {
         return this.appleRepository.save(podcast);
     }
 
-    @GetMapping("podcast/{id}")
+    @GetMapping("/podcast/{id}")
     public ResponseEntity<ApplePodcast> getPodcastDetails(@PathVariable(value = "id") Long podcastTrackId ) throws ResourceNotFoundException {
         ApplePodcast podcast = appleRepository.findById(podcastTrackId).orElseThrow(() ->
             new ResourceNotFoundException("Podcast not found for this id :: " + podcastTrackId)
@@ -97,7 +97,7 @@ public class AppleController {
         return ResponseEntity.ok().body(podcast);
     }
 
-    @PostMapping("podcast")
+    @PostMapping("/podcast")
     public String createPodcast(@RequestBody Integer podcastId) {
         return "DONE";
     }

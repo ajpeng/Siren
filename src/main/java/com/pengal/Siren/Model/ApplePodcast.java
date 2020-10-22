@@ -1,11 +1,13 @@
 package com.pengal.Siren.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
-import java.util.LinkedList;
 import java.util.List;
 
 @Entity
 @Table(name = "podcasts")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ApplePodcast {
     private String artistName;
     private String collectionName;
