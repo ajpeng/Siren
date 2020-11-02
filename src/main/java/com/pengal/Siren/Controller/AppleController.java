@@ -29,11 +29,10 @@ public class AppleController {
     private WebClient.Builder webClientBuilder;
     @Autowired
     private Logger logger;
-
-    @GetMapping("/top100")
-    public String top100() {
-        return "{\"TODO\"}";
-    }
+    @Autowired
+    private RestTemplate restTemplate;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @GetMapping("/search")
     public String search(@RequestParam String query) {
@@ -62,12 +61,55 @@ public class AppleController {
         }
     }
 
+    @GetMapping(value="/getCollectionById/{id}")
+    public Long getCollectionId(@PathVariable("id") Long id) throws JsonProcessingException, ResourceNotFoundException {
+        String url = ITUNES_URL + "collectionId=" + id.toString();
+        restTemplate.getMessageConverters()
+                .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+        HttpEntity<String> response = restTemplate.getForEntity(url, String.class);
+        ApplePodcastWrapper applePodcastWrapper = objectMapper.readValue(response.getBody(), ApplePodcastWrapper.class);
+        List<ApplePodcast> applePodcastList;
+        if (applePodcastWrapper != null) {
+            applePodcastList = applePodcastWrapper.getResults();
+            appleRepository.saveAll(applePodcastList);
+        } else {
+            return null;
+        }
+
+        if (applePodcastList.size() > 0) {
+            return applePodcastList.get(0).getId();
+        } else {
+            throw new ResourceNotFoundException("Could not find collectionId with " + id);
+        }
+    }
+
+    @GetMapping(value="/getCollectionByName/{name}")
+    public Long getCollectionByName(@PathVariable("name") String name) throws JsonProcessingException, ResourceNotFoundException {
+        String url = ITUNES_URL + "collectionName=" + name;
+        restTemplate.getMessageConverters()
+                .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+        HttpEntity<String> response = restTemplate.getForEntity(url, String.class);
+        ApplePodcastWrapper applePodcastWrapper = objectMapper.readValue(response.getBody(), ApplePodcastWrapper.class);
+        List<ApplePodcast> applePodcastList;
+
+        if (applePodcastWrapper != null) {
+            applePodcastList = applePodcastWrapper.getResults();
+            appleRepository.saveAll(applePodcastList);
+        } else {
+            return null;
+        }
+
+        if (applePodcastList.size() > 0) {
+            return applePodcastList.get(0).getId();
+        } else {
+            throw new ResourceNotFoundException("Could not find collectionName with " + name);
+        }
+    }
+
     @RequestMapping(value="/news")
     public String updateNews() throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         String url = ITUNES_URL + "term=" + "news";
-        HttpHeaders requestHeaders = new HttpHeaders();
-        requestHeaders.setContentType(MediaType.APPLICATION_JSON);
         restTemplate.getMessageConverters()
                 .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
         HttpEntity<String> response = restTemplate.getForEntity(url, String.class);
