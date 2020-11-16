@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pengal.Siren.Exception.ResourceNotFoundException;
 import com.pengal.Siren.Model.ApplePodcast;
 import com.pengal.Siren.Model.ApplePodcastWrapper;
-import com.pengal.Siren.Repositories.AppleRepository;
+import com.pengal.Siren.Repository.AppleRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -17,10 +17,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static com.pengal.Siren.Repositories.AppleRepository.ITUNES_URL;
+import static com.pengal.Siren.Repository.AppleRepository.ITUNES_URL;
 
 @RestController
-@RequestMapping("/apple")
+@RequestMapping(value = "/apple")
 public class AppleController {
 
     @Autowired

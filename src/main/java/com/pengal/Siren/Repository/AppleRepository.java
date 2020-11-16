@@ -1,4 +1,4 @@
-package com.pengal.Siren.Repositories;
+package com.pengal.Siren.Repository;
 
 import com.pengal.Siren.Model.ApplePodcast;
 import org.springframework.data.repository.CrudRepository;
