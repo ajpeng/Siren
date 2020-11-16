@@ -26,8 +26,7 @@ public class RedirectController {
 
     @GetMapping("/{alias}")
     public ResponseEntity<?> handleRedirect(@PathVariable String alias) throws URISyntaxException {
-//        Redirect redirect = redirectService.getRedirect(alias);
-        URI uri = new URI("www.google.ca");
+        URI uri = new URI("http://www.google.ca");
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(uri);
         return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);

@@ -20,12 +20,14 @@ public class RedirectService {
 
     public Optional<Redirect> createRedirect(RedirectCreationRequest redirectCreationRequest) throws BadRequestException {
         if (redirectRepository.existsByAlias(redirectCreationRequest.getAlias())) {
-            throw new BadRequestException("Alias already exits");
+            throw new BadRequestException("Alias already exists");
         }
-        System.out.println("Redirect request" +  redirectCreationRequest.toString());
-        Redirect redirect = redirectRepository.save(new Redirect(redirectCreationRequest.getAlias(), redirectCreationRequest.getUrl()));
-        System.out.println("Redirect " +  redirect.toString());
-        return Optional.ofNullable(redirect);
+        System.out.println("Redirect Request " + redirectCreationRequest.toString());
+        Redirect redirect = new Redirect(redirectCreationRequest.getAlias(), redirectCreationRequest.getUrl());
+
+        Redirect postSaveRedirect = redirectRepository.save(redirect);
+        System.out.println("Redirect" + postSaveRedirect);
+        return Optional.ofNullable(postSaveRedirect);
     }
 
     public Optional<Redirect> getRedirect() {

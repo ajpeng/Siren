@@ -8,6 +8,9 @@ public class RedirectCreationRequest {
     @NotNull
     private String url;
 
+    public RedirectCreationRequest() {
+    }
+
     public RedirectCreationRequest(final String alias, final String url) {
         this.alias = alias;
         this.url = url;
